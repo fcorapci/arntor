@@ -1,8 +1,16 @@
 # Arntor – Computational Genomics Toolkit
 
-Arntor is a computational genomics toolkit that integrates DNA-level and RNA-level genomic annotation pipelines.
+This project is a modular computational genomics toolkit designed to analyze genomic structure at multiple biological scales.
 
-It provides modular tools for structural classification of genomic features using standard bioinformatics frameworks.
+It integrates:
+- DNA-level repeat region classification (STRs)
+- RNA-level transcript structure annotation
+- 
+## Motivation
+
+Genomic regulatory architecture is inherently multi-scale. While repetitive DNA elements (STRs) affect genome stability and regulation, transcript-level structures determine gene expression complexity.
+
+This toolkit was developed to provide a unified computational framework for analyzing both levels using standard bioinformatics tools.
 
 ---
 
