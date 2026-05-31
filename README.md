@@ -5,7 +5,7 @@ This project is a modular computational genomics toolkit designed to analyze gen
 It integrates:
 - DNA-level repeat region classification (STRs)
 - RNA-level transcript structure annotation
-- 
+
 ## Motivation
 
 Genomic regulatory architecture is inherently multi-scale. While repetitive DNA elements (STRs) affect genome stability and regulation, transcript-level structures determine gene expression complexity.
