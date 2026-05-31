@@ -1,5 +1,5 @@
 # arntor
-Arntor is a command-line tool that classifies short tandem repeats (STRs) into genomic regions such as promoters, exons, introns, and intergenic regions.
+Arntor is a lightweight computational genomics tool designed to classify short tandem repeats (STRs) into functional genomic regions using gene annotations and repeat element data. It integrates standard bioinformatics tools (bedtools, TRF) into a reproducible analysis pipeline.
 
 ## What it does
 
