@@ -1,0 +1,89 @@
+#!/bin/bash
+
+if [ $# -lt 4 ]; then
+    echo "Usage: $0 <annotation_file.gtf/gff> <referance_name> <output_dir> <genome_size>"
+    echo "Example: $0 gencode.v49.primary_assembly.annotation.gtf hg38 /annotations hg38_chrom.sizes"
+    exit 1
+fi
+
+INPUT_GTF=$1
+REF_NAME=$2
+OUT_DIR=$3
+GENOME_SIZE=$4
+
+mkdir -p "$OUT_DIR"
+
+Rscript - <<EOF
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager", repos = "http://cran.us.r-project.org")
+
+pkgs <- c("GenomicFeatures", "dplyr")
+
+for (pkg in pkgs) {
+  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+    BiocManager::install(pkg, update = FALSE, ask = FALSE)
+  }
+}
+
+library(GenomicFeatures)
+library(dplyr)
+
+regionbytranscript <- function(pathtoannotation, refname, outdir) {
+  txdb <- GenomicFeatures::makeTxDbFromGFF(pathtoannotation, format="gtf")
+  introns_tx <- intronsByTranscript(txdb, use.names=TRUE)
+  exons_tx <- exonsBy(txdb, by="tx", use.names=TRUE)
+  introns <- as.data.frame(introns_tx)
+  exons <- as.data.frame(exons_tx)
+  intron_ranked <- introns %>%
+    group_by(group_name) %>% 
+    arrange(start) %>%       
+    mutate(
+      intron_no = if_else(
+        strand == "+", 
+        row_number(),            
+        n() - row_number() + 1   
+      )
+    ) %>%
+    ungroup()
+
+  intron_ranked <- intron_ranked[c(3, 4, 5, 2, 8, 7)]
+  exons <- exons[c(3, 4, 5, 2, 10, 7)]
+  
+full_path_exon <- file.path(outdir, paste0(refname, "_exon.gtf"))
+write.table(exons,
+            file = full_path_exon,
+            quote = FALSE,
+            sep = "\t",
+            row.names = FALSE,
+            col.names = FALSE)
+
+full_path_intron <- file.path(outdir, paste0(refname, "_intron.gtf"))
+write.table(intron_ranked,
+            file = full_path_intron,
+            quote = FALSE,
+            sep = "\t",
+            row.names = FALSE,
+            col.names = FALSE)
+}
+
+regionbytranscript("$INPUT_GTF", "$REF_NAME", "$OUT_DIR")
+EOF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
